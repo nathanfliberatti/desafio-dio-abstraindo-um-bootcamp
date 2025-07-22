@@ -1,10 +1,7 @@
 package dominio;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class Bootcamp {
 
@@ -19,6 +16,16 @@ public class Bootcamp {
     private Set<Dev> devsInscritos = new HashSet<>();
 
     private Set<Conteudo> conteudos = new LinkedHashSet<>();
+
+    private static final List<Bootcamp> todosBootcamps = new ArrayList<>();
+
+    public Bootcamp() {
+        todosBootcamps.add(this);
+    }
+
+    public static List<Bootcamp> getTodosBootcamps() {
+        return todosBootcamps;
+    }
 
     public String getNome() {
         return nome;
@@ -63,7 +70,12 @@ public class Bootcamp {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Bootcamp bootcamp)) return false;
-        return Objects.equals(nome, bootcamp.nome) && Objects.equals(descricao, bootcamp.descricao) && Objects.equals(dataInicial, bootcamp.dataInicial) && Objects.equals(dataFinal, bootcamp.dataFinal) && Objects.equals(devsInscritos, bootcamp.devsInscritos) && Objects.equals(conteudos, bootcamp.conteudos);
+        return Objects.equals(nome, bootcamp.nome) &&
+                Objects.equals(descricao, bootcamp.descricao) &&
+                Objects.equals(dataInicial, bootcamp.dataInicial) &&
+                Objects.equals(dataFinal, bootcamp.dataFinal) &&
+                Objects.equals(devsInscritos, bootcamp.devsInscritos) &&
+                Objects.equals(conteudos, bootcamp.conteudos);
     }
 
     @Override

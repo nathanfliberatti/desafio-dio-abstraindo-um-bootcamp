@@ -1,9 +1,10 @@
 package dominio;
 
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import exceptions.DevAlreadyEnrolledException;
+import exceptions.DevNotEnrolledException;
+import exceptions.NoSubscribedContentException;
+
+import java.util.*;
 
 public class Dev {
 
@@ -13,17 +14,31 @@ public class Dev {
 
     public void inscreverBootcamp(Bootcamp bootcamp) {
         this.conteudosInscritos.addAll(bootcamp.getConteudos());
+        if (bootcamp.getDevsInscritos().contains(this)) {
+            throw new DevAlreadyEnrolledException(String.format("Dev %s já está inscrito no bootcamp\n", this.nome));
+        }
         bootcamp.getDevsInscritos().add(this);
     }
 
     public void progredir() {
-        Optional<Conteudo> conteudo = this.conteudosInscritos.stream().findFirst();
-        if (conteudo.isPresent()) {
-            this.conteudosConcluidos.add(conteudo.get());
-            this.conteudosInscritos.remove(conteudo.get());
-        } else {
-            System.err.println("Você não está matriculado em nenhum conteúdo");
+
+        if (this.conteudosInscritos == null || this.conteudosInscritos.isEmpty()) {
+            throw new NoSubscribedContentException(this.nome);
         }
+
+        boolean estaIncritoEmAlgumBootcamp = Bootcamp.getTodosBootcamps()
+                .stream()
+                .anyMatch(b -> b.getDevsInscritos().contains(this));
+
+        if (!estaIncritoEmAlgumBootcamp) {
+            throw new DevNotEnrolledException(this.nome);
+        }
+
+        Optional<Conteudo> conteudo = this.conteudosInscritos.stream().findFirst();
+        conteudo.ifPresent(c -> {
+            this.conteudosConcluidos.add(c);
+            this.conteudosInscritos.remove(c);
+        });
     }
 
     public double calcularTotalXp() {
@@ -60,11 +75,11 @@ public class Dev {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Dev dev)) return false;
-        return Objects.equals(nome, dev.nome) && Objects.equals(conteudosInscritos, dev.conteudosInscritos) && Objects.equals(conteudosConcluidos, dev.conteudosConcluidos);
+        return Objects.equals(nome, dev.nome);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nome, conteudosInscritos, conteudosConcluidos);
+        return Objects.hashCode(nome);
     }
 }

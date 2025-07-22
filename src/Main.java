@@ -2,6 +2,9 @@ import dominio.Bootcamp;
 import dominio.Curso;
 import dominio.Dev;
 import dominio.Mentoria;
+import exceptions.DevAlreadyEnrolledException;
+import exceptions.DevNotEnrolledException;
+import exceptions.NoSubscribedContentException;
 
 import java.time.LocalDate;
 
@@ -32,10 +35,43 @@ public class Main {
 
         Dev devJoao = new Dev();
         devJoao.setNome("João");
-        devJoao.inscreverBootcamp(bootcamp);
+
+        try {
+            devJoao.inscreverBootcamp(bootcamp);
+        } catch (DevAlreadyEnrolledException ex) {
+            System.out.println(ex.getMessage());
+        }
+
         System.out.printf("Conteúdos inscritos de %s: %s\n", devJoao.getNome(), devJoao.getConteudosInscritos());
-        devJoao.progredir();
-        devJoao.progredir();
+
+        try {
+            devJoao.progredir();
+            System.out.printf("Dev %s progrediu com sucesso\n", devJoao.getNome());
+        } catch (NoSubscribedContentException | DevNotEnrolledException ex) {
+            System.out.println("Erro ao progredir: " + ex.getMessage());
+        }
+
+        try {
+            devJoao.progredir();
+            System.out.printf("Dev %s progrediu com sucesso\n", devJoao.getNome());
+        } catch (NoSubscribedContentException | DevNotEnrolledException ex) {
+            System.out.println("Erro ao progredir: " + ex.getMessage());
+        }
+
+        try {
+            devJoao.progredir();
+            System.out.printf("Dev %s progrediu com sucesso\n", devJoao.getNome());
+        } catch (NoSubscribedContentException | DevNotEnrolledException ex) {
+            System.out.println("Erro ao progredir: " + ex.getMessage());
+        }
+
+        try {
+            devJoao.progredir();
+            System.out.printf("Dev %s progrediu com sucesso\n", devJoao.getNome());
+        } catch (NoSubscribedContentException | DevNotEnrolledException ex) {
+            System.out.println("Erro ao progredir: " + ex.getMessage());
+        }
+
         System.out.println("=============");
         System.out.printf("Conteúdos inscritos de %s: %s\n", devJoao.getNome(), devJoao.getConteudosInscritos());
         System.out.printf("Conteúdos concluídos de %s: %s\n", devJoao.getNome(), devJoao.getConteudosConcluidos());
@@ -45,13 +81,26 @@ public class Main {
 
         Dev devMaria = new Dev();
         devMaria.setNome("Maria");
-        devMaria.inscreverBootcamp(bootcamp);
+
+        try {
+            devMaria.inscreverBootcamp(bootcamp);
+        } catch (DevAlreadyEnrolledException ex) {
+            System.out.println(ex.getMessage());
+        }
+
         System.out.printf("Conteúdos inscritos de %s: %s\n", devMaria.getNome(), devMaria.getConteudosInscritos());
-        devMaria.progredir();
+
+        try {
+            devMaria.progredir();
+        } catch (NoSubscribedContentException ex) {
+            System.out.println(ex.getMessage());
+        }
+
         System.out.println("=============");
         System.out.printf("Conteúdos inscritos de %s: %s\n", devMaria.getNome(), devMaria.getConteudosInscritos());
         System.out.printf("Conteúdos concluídos de %s: %s\n", devMaria.getNome(), devMaria.getConteudosConcluidos());
         System.out.printf("XP total de %s: %s\n", devMaria.getNome(), devMaria.calcularTotalXp());
+
     }
 
 }
